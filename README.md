@@ -1,6 +1,6 @@
 # AutoBrew
 
-AutoBrew.sh makes automated Homebrew deployment simple and easy. 
+AutoBrew.sh makes Homebrew deployments simple, easy, and automated. 
 
 ## How to install Homebrew using AutoBrew.sh
 Simply run this script using your favorite management tool such as Jamf Pro or Munki to install Homebrew as the currently logged in user:
