@@ -28,7 +28,7 @@ fi
     echo \"WARNING: Running as root...\"/" | \
     sed 's/  wait_for_user/  :/')"
 
-# Reset /usr/loal permissions for current user
+# Reset /usr/local permissions for current user
 chown -R "${ConsoleUser}":admin /usr/local && \
     chmod -R g+rwx /usr/local
 
