@@ -13,8 +13,12 @@ ConsoleUser=$(echo "show State:/Users/ConsoleUser" | \
     scutil | awk '/Name :/ && ! /loginwindow/ { print $3 }')
 
 # Check if parameter passed to use pre-defined user
-if [[ -n $1 ]]; then
-    ConsoleUser=$1
+if [[ -n $3 ]]; then
+    # Supporting running the script in Jamf with no specialization via Self Service
+    ConsoleUser=$3
+elif [[ -n $1 ]]; then
+    # Fallback case for the command line initiated method
+    ConsoleUser=$3
 fi
 
 # Install Homebrew | strip out all interactive prompts
