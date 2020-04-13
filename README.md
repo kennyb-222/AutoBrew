@@ -7,6 +7,6 @@ Simply run this script using your favorite management tool such as Jamf Pro or M
 
 `sudo /bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/kennyb-222/AutoBrew/master/AutoBrew.sh)"`
 
-You can also run this script to install homebrew for any user:
+You can also run this script to install homebrew for any predefined user:
 
 `sudo /bin/sh /path/to/AutoBrew.sh "username"`
