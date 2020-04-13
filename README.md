@@ -1,4 +1,4 @@
-# AutoBrew.sh
+# AutoBrew
 
 AutoBrew.sh makes automated Homebrew deployment simple and easy. 
 
