@@ -1,8 +1,11 @@
 # AutoBrew
 
-AutoBrew.sh makes Homebrew deployments simple, easy, and automated. 
+AutoBrew.sh makes Homebrew deployments simple, easy, and automated.
 
-## How to install Homebrew using AutoBrew.sh
+##### Disclaimer
+"Running/Installing Homebrew as root is extremely dangerous and no longer supported using the official Homebrew installation method."
+
+### How to install Homebrew using AutoBrew.sh
 Simply run this script using your favorite management tool such as Jamf Pro or Munki to install Homebrew as the currently logged in user, or you can run the scirpt directly from the command line as follows:
 
 `sudo /bin/sh /path/to/AutoBrew.sh`
