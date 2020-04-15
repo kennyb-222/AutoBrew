@@ -1,5 +1,6 @@
 #!/bin/sh
 # AutoBrew - Install Homebrew with root
+# Source: https://github.com/kennyb-222/AutoBrew/
 # Author: Kenny Botelho
 # Version: 1.0
 
