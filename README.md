@@ -13,3 +13,8 @@ Simply run this script using your favorite management tool such as Jamf Pro or M
 You can also run this script with an argument containing the username to install homebrew for any predefined user:
 
 `sudo /bin/sh /path/to/AutoBrew.sh "username"`
+
+
+
+##### Notes
+This has only been tested on macOS Catalina 10.15
