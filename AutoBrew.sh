@@ -44,13 +44,13 @@ unset HOME
 unset USER
 
 # Finish up Homebrew install as target user
-sudo -u "${TargetUser}" bash -c "/usr/local/bin/brew update --force"
+su - "${TargetUser}" -c "/usr/local/bin/brew update --force"
 
 # Run cleanup before checking in with the doctor
-sudo -u "${TargetUser}" bash -c "/usr/local/bin/brew cleanup"
+su - "${TargetUser}" -c "/usr/local/bin/brew cleanup"
 
 # Check Homebrew install status
-sudo -u "${TargetUser}" bash -c "/usr/local/bin/brew doctor"
+su - "${TargetUser}" -c "/usr/local/bin/brew doctor"
 
 # Check with the doctor status to see if everything looks good
 if [[ $? -eq 0 ]]; then
