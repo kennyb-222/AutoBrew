@@ -23,6 +23,28 @@ elif [[ -n $1 ]]; then
     TargetUser=$3
 fi
 
+# Ensure TargetUser isn't empty
+if [ -z "$TargetUser" ]; then
+    /bin/echo "'TargetUser' is empty. You must specify a user!"
+    exit 1
+fi
+
+# Verify the TargetUser is valid. In some cases, user may be provisioned
+# (created with something like sysadminctl) but not fully created.
+# A 'dscl . list' will reveal all users, including those provisioned, while a
+# 'dscl . read' will only return an exit code of 0 if the user is created & valid.
+# A provisioned user will cause 'su - "${TargetUser}" -c "<install brew cmd>"' to fail,
+# but chown will happily set the desired provisioned user ownership.
+VALID_USER=$(/usr/bin/dscl . read /Users/${TargetUser})
+exitcode=$(/bin/echo $?)
+
+if [ "$exitcode" != 0 ]; then
+    /bin/echo "Specified user - ${TargetUser} - is invalid. This could be because"
+    /bin/echo "the user doesn't exist or was only provisioned with a tool like"
+    /bin/echo "'sysadminctl', and not fully created."
+    exit 1
+fi
+
 # Install Homebrew | strip out all interactive prompts
 /bin/bash -c "$(curl -fsSL \
     https://raw.githubusercontent.com/Homebrew/install/master/install.sh | \
