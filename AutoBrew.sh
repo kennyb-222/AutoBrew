@@ -36,7 +36,8 @@ brew_file_paths=$(sed '1,/==> This script will install:/d;/==> /,$d' \
     "${BREW_INSTALL_LOG}")
 brew_dir_paths=$(sed '1,/==> The following new directories/d;/==> /,$d' \
     "${BREW_INSTALL_LOG}")
-chown -R "${TargetUser}":admin "${brew_file_paths}" "${brew_dir_paths}"
+# shellcheck disable=SC2086
+chown -R "${TargetUser}":admin ${brew_file_paths} ${brew_dir_paths}
 chgrp admin /usr/local/bin/
 chmod g+w /usr/local/bin
 
