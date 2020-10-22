@@ -2,7 +2,7 @@
 # AutoBrew - Install Homebrew with root
 # Source: https://github.com/kennyb-222/AutoBrew/
 # Author: Kenny Botelho
-# Version: 1.0.1
+# Version: 1.0.2
 
 # Set environment variables
 HOME="$(mktemp -d)"
@@ -36,13 +36,10 @@ fi
 # 'dscl . read' will only return an exit code of 0 if the user is created & valid.
 # A provisioned user will cause 'su - "${TargetUser}" -c "<install brew cmd>"' to fail,
 # but chown will happily set the desired provisioned user ownership.
-VALID_USER=$(/usr/bin/dscl . read /Users/${TargetUser})
-exitcode=$(/bin/echo $?)
-
-if [ "$exitcode" != 0 ]; then
-    /bin/echo "Specified user - ${TargetUser} - is invalid. This could be because"
-    /bin/echo "the user doesn't exist or was only provisioned with a tool like"
-    /bin/echo "'sysadminctl', and not fully created."
+if /usr/bin/dscl . -read "/Users/$TargetUser"; then
+    /bin/echo "Validated $TargetUser."
+else
+    /bin/echo "Specified user ($TargetUser) is invalid. This could be because the user doesn't exist, or was only provisioned with a tool like sysadminctl and not fully created."
     exit 1
 fi
 
