@@ -18,4 +18,4 @@ You can also run this script with an argument containing the username to install
 
 
 ##### Notes
-This has only been tested on macOS Catalina 10.15 fresh installations
+This has only been tested on macOS Catalina and macOS Big Sur
