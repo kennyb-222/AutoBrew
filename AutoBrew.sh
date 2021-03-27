@@ -2,7 +2,7 @@
 # AutoBrew - Install Homebrew with root
 # Source: https://github.com/kennyb-222/AutoBrew/
 # Author: Kenny Botelho
-# Version: 1.0.2
+# Version: 1.1
 
 # Set environment variables
 HOME="$(mktemp -d)"
@@ -55,23 +55,35 @@ brew_file_paths=$(sed '1,/==> This script will install:/d;/==> /,$d' \
     "${BREW_INSTALL_LOG}")
 brew_dir_paths=$(sed '1,/==> The following new directories/d;/==> /,$d' \
     "${BREW_INSTALL_LOG}")
+# Get the paths for the installed brew binary
+brew_bin=$(echo "${brew_file_paths}" | grep "/bin/brew")
+brew_bin_path=${brew_bin%/brew}
 # shellcheck disable=SC2086
 chown -R "${TargetUser}":admin ${brew_file_paths} ${brew_dir_paths}
-chgrp admin /usr/local/bin/
-chmod g+w /usr/local/bin
+chgrp admin ${brew_bin_path}/
+chmod g+w ${brew_bin_path}
 
 # Unset home/user environment variables
 unset HOME
 unset USER
 
 # Finish up Homebrew install as target user
-su - "${TargetUser}" -c "/usr/local/bin/brew update --force"
+su - "${TargetUser}" -c "${brew_bin} update --force"
 
 # Run cleanup before checking in with the doctor
-su - "${TargetUser}" -c "/usr/local/bin/brew cleanup"
+su - "${TargetUser}" -c "${brew_bin} cleanup"
+
+# Check for missing PATH
+get_path_cmd=$(su - "${TargetUser}" -c "${brew_bin} doctor 2>&1 | grep 'export PATH='")
+
+# Add Homebrew's "bin" to target user PATH
+if [[ -n ${get_path_cmd} ]];then
+su - "${TargetUser}" -c "${get_path_cmd}"
+shell_cfg=$(echo $get_path_cmd | awk -F">> " '{print $NF}')
+fi
 
 # Check Homebrew install status, check with the doctor status to see if everything looks good
-if su - "${TargetUser}" -c "/usr/local/bin/brew doctor"; then
+if su - "${TargetUser}" -c "source ${shell_cfg};${brew_bin} doctor"; then
     echo 'Homebrew Installation Complete! Your system is ready to brew.'
     exit 0
 else
