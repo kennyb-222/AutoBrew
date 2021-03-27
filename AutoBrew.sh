@@ -36,7 +36,7 @@ fi
 # 'dscl . read' will only return an exit code of 0 if the user is created & valid.
 # A provisioned user will cause 'su - "${TargetUser}" -c "<install brew cmd>"' to fail,
 # but chown will happily set the desired provisioned user ownership.
-if /usr/bin/dscl . -read "/Users/$TargetUser"; then
+if /usr/bin/dscl . -read "/Users/$TargetUser" 2>&1 >/dev/null; then
     /bin/echo "Validated $TargetUser."
 else
     /bin/echo "Specified user ($TargetUser) is invalid. This could be because the user doesn't exist, or was only provisioned with a tool like sysadminctl and not fully created."
