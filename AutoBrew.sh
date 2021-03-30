@@ -30,14 +30,9 @@ if [ -z "${TargetUser}" ]; then
     exit 1
 fi
 
-# Verify the TargetUser is valid. In some cases, user may be provisioned
-# (created with something like sysadminctl) but not fully created.
-# A 'dscl . list' will reveal all users, including those provisioned, while a
-# 'dscl . read' will only return an exit code of 0 if the user is created & valid.
-# A provisioned user will cause 'su - "${TargetUser}" -c "<install brew cmd>"' to fail,
-# but chown will happily set the desired provisioned user ownership.
+# Verify the TargetUser is valid
 if /usr/bin/dscl . -read "/Users/${TargetUser}" 2>&1 >/dev/null; then
-    /bin/echo "Validated $TargetUser"
+    /bin/echo "Validated ${TargetUser}"
 else
     /bin/echo "Specified user \"${TargetUser}\" is invalid"
     exit 1
