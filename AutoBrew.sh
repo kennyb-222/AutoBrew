@@ -77,7 +77,7 @@ su - "${TargetUser}" -c "${brew_bin} cleanup"
 get_path_cmd=$(su - "${TargetUser}" -c "${brew_bin} doctor 2>&1 | grep 'export PATH='")
 
 # Add Homebrew's "bin" to target user PATH
-if [[ -n ${get_path_cmd} ]];then
+if [ -n ${get_path_cmd} ];then
 su - "${TargetUser}" -c "${get_path_cmd}"
 fi
 
