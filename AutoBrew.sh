@@ -25,7 +25,7 @@ elif [ -n "$1" ]; then
 fi
 
 # Ensure TargetUser isn't empty
-if [ -z "$TargetUser" ]; then
+if [ -z "${TargetUser}" ]; then
     /bin/echo "'TargetUser' is empty. You must specify a user!"
     exit 1
 fi
@@ -36,10 +36,10 @@ fi
 # 'dscl . read' will only return an exit code of 0 if the user is created & valid.
 # A provisioned user will cause 'su - "${TargetUser}" -c "<install brew cmd>"' to fail,
 # but chown will happily set the desired provisioned user ownership.
-if /usr/bin/dscl . -read "/Users/$TargetUser" 2>&1 >/dev/null; then
-    /bin/echo "Validated $TargetUser."
+if /usr/bin/dscl . -read "/Users/${TargetUser}" 2>&1 >/dev/null; then
+    /bin/echo "Validated $TargetUser"
 else
-    /bin/echo "Specified user ($TargetUser) is invalid. This could be because the user doesn't exist, or was only provisioned with a tool like sysadminctl and not fully created."
+    /bin/echo "Specified user \"${TargetUser}\" is invalid"
     exit 1
 fi
 
@@ -79,11 +79,10 @@ get_path_cmd=$(su - "${TargetUser}" -c "${brew_bin} doctor 2>&1 | grep 'export P
 # Add Homebrew's "bin" to target user PATH
 if [[ -n ${get_path_cmd} ]];then
 su - "${TargetUser}" -c "${get_path_cmd}"
-shell_cfg=$(echo $get_path_cmd | awk -F">> " '{print $NF}')
 fi
 
 # Check Homebrew install status, check with the doctor status to see if everything looks good
-if su - "${TargetUser}" -c "source ${shell_cfg};${brew_bin} doctor"; then
+if su - "${TargetUser}" -i -c "${brew_bin} doctor"; then
     echo 'Homebrew Installation Complete! Your system is ready to brew.'
     exit 0
 else
