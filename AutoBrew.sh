@@ -69,7 +69,7 @@ su - "${TargetUser}" -c "${brew_bin} update --force"
 su - "${TargetUser}" -c "${brew_bin} cleanup"
 
 # Check for missing PATH
-get_path_cmd=$(su - "${TargetUser}" -c "${brew_bin} doctor 2>&1 | grep 'export PATH='")
+get_path_cmd=$(su - "${TargetUser}" -c "${brew_bin} doctor 2>&1 | grep 'export PATH=' | tail -1")
 
 # Add Homebrew's "bin" to target user PATH
 if [ -n "${get_path_cmd}" ]; then
