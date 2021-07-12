@@ -2,7 +2,7 @@
 # AutoBrew - Install Homebrew with root
 # Source: https://github.com/kennyb-222/AutoBrew/
 # Author: Kenny Botelho
-# Version: 1.1
+# Version: 1.2
 
 # Set environment variables
 HOME="$(mktemp -d)"
@@ -21,7 +21,7 @@ if [ -n "$3" ]; then
     TargetUser=$3
 elif [ -n "$1" ]; then
     # Fallback case for the command line initiated method
-    TargetUser=$3
+    TargetUser=$1
 fi
 
 # Ensure TargetUser isn't empty
@@ -68,12 +68,22 @@ su - "${TargetUser}" -c "${brew_bin} update --force"
 # Run cleanup before checking in with the doctor
 su - "${TargetUser}" -c "${brew_bin} cleanup"
 
-# Check for missing PATH
-get_path_cmd=$(su - "${TargetUser}" -c "${brew_bin} doctor 2>&1 | grep 'export PATH=' | tail -1")
+# Check for post-installation issues with "brew doctor"
+doctor_cmds=$(su - "${TargetUser}" -i -c "${brew_bin} doctor 2>&1 | grep 'mkdir\|chown\|chmod\|echo\|&&'")
 
-# Add Homebrew's "bin" to target user PATH
-if [ -n "${get_path_cmd}" ]; then
-su - "${TargetUser}" -c "${get_path_cmd}"
+# Run "brew doctor" remediation commands
+if [ -n "${doctor_cmds}" ]; then
+    echo "\"brew doctor\" failed. Attempting to repair..."
+    while IFS= read -r line; do
+        echo "RUNNING: ${line}"
+        if [ "${line}" == *sudo* ]; then
+            # Run cmd with sudo
+            "${line}"
+        else
+            # Run cmd as TargetUser
+            su - "${TargetUser}" -c "${line}"
+        fi
+    done <<< "${doctor_cmds}"
 fi
 
 # Check Homebrew install status, check with the doctor status to see if everything looks good
