@@ -76,9 +76,10 @@ if [ -n "${doctor_cmds}" ]; then
     echo "\"brew doctor\" failed. Attempting to repair..."
     while IFS= read -r line; do
         echo "RUNNING: ${line}"
-        if [ "${line}" == *sudo* ]; then
-            # Run cmd with sudo
-            "${line}"
+        if [[ "${line}" == *sudo* ]]; then
+            # run command with variable substitution
+            cmd_modified=$(su - "${TargetUser}" -c "echo ${line}")
+            ${cmd_modified}
         else
             # Run cmd as TargetUser
             su - "${TargetUser}" -c "${line}"
