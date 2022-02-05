@@ -14,8 +14,3 @@ You can also run this script with an argument containing the username to install
 
 `sudo /bin/sh /path/to/AutoBrew.sh "username"`
 
- 
-
-
-##### Notes
-This has only been tested on macOS Catalina and macOS Big Sur
